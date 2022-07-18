@@ -1,0 +1,59 @@
+#Docker Compose for development
+version: '3.5'
+services:
+  app_db:
+    image: mongo:5.0.9
+    container_name: app_db
+    networks: [app]
+    ports:
+      - 27017:27017
+  app_development:
+    image: app_development
+    container_name: app_development
+    user: "1000:1000"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /app
+    environment:
+      MONGODB_USERNAME: root
+      MONGODB_PASSWORD: root
+      MONGODB_URL: mongodb://app_db:27017/
+      NODE_ENV: development_docker
+      PORT: 8000
+    volumes:
+      - type: bind
+        source: .
+        target: /app
+    ports:
+      - 8000:8000
+      - 9229:9229 #debug port
+    depends_on:
+      - app_db
+    networks: [app]
+    entrypoint: 'npx nest start --debug 0.0.0.0:9229 --watch'
+  app:
+    image: app_production
+    container_name: app
+    user: "1000:1000"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      #DB CONFIGURATION
+      MONGODB_USERNAME: root
+      MONGODB_PASSWORD: root
+      MONGODB_URL: mongodb://app_db:27017/
+      NODE_ENV: development_docker
+      PORT: 8000
+    ports:
+      - 8000:8000
+    networks: [app]
+    depends_on:
+      - app_db
+
+
+networks:
+  app:
+    name: app
+    driver: bridge
