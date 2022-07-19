@@ -10,3 +10,7 @@ PORT: 8000
 `docker-compose up app`
 
 PORT: 9000
+
+## Run tests
+  
+`docker-compose up app_tests`

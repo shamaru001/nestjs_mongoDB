@@ -37,8 +37,6 @@ services:
       dockerfile: Dockerfile
     environment:
       #DB CONFIGURATION
-      MONGODB_USERNAME: root
-      MONGODB_PASSWORD: root
       MONGODB_URL: mongodb://app_db:27017/
       NODE_ENV: development_docker
       PORT: 8000
@@ -47,7 +45,22 @@ services:
     networks: [app]
     depends_on:
       - app_db
-
+  app_tests:
+    image: app_tests
+    container_name: app_tests
+    user: "1000:1000"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      #DB CONFIGURATION
+      MONGODB_URL: mongodb://app_db:27017/
+      NODE_ENV: development_docker
+      PORT: 8000
+    networks: [app]
+    depends_on:
+      - app_db
+    entrypoint: "npm run test:cov"
 
 networks:
   app:

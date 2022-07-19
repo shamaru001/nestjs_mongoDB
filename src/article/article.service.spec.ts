@@ -6,6 +6,10 @@ import {
 import {
     Article
 } from './schemas/article.schema';
+import {
+    ArticleModelMock,
+    ArticleDataMock,
+} from '../mocks/article.model.mock';
 
 describe('ArticleService tests', () => {
     let service: ArticleService;
@@ -16,7 +20,7 @@ describe('ArticleService tests', () => {
                 ArticleService,
                 {
                     provide: getModelToken(Article.name),
-                    useValue: { }  // <-- Use the Model Class from Mongoose
+                    useClass: ArticleModelMock
                 },
             ],
         }).compile();
@@ -24,7 +28,15 @@ describe('ArticleService tests', () => {
         service = module.get<ArticleService>(ArticleService);
     });
 
-    it('should find articles', () => {
-        expect(service.findArticles(2, {})).toBeDefined();
+    it('should find articles', async () => {
+        const data = await service.findArticles(4, 1,{});
+        expect(data.length).toEqual(ArticleDataMock.length);
     });
+
+
+    it('should find and delete a article', async () => {
+        const data = await service.DeleteArticle('test');
+        expect(data).toHaveProperty('comment_text');
+    });
+
 });
