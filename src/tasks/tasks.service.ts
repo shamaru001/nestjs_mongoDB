@@ -28,7 +28,7 @@ export class TasksService  implements OnModuleInit {
 
 
     @Cron(CronExpression.EVERY_HOUR)
-    async injectArticles() {
+    async injectArticles(): Promise<boolean> {
         this.logger.debug('RUNNING CRONJOB');
         const response = await this.findAll();
         if (response?.data) {
@@ -45,8 +45,9 @@ export class TasksService  implements OnModuleInit {
                 }
             }
             this.logger.debug('DATA INJECTED');
+            return true;
         }
-
+        return false;
     }
 
 }
