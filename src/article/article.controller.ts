@@ -47,7 +47,7 @@ export class ArticleController {
               forbidNonWhitelisted: true,
           })) articleQueryDto: ArticleQueryDto
       ): Promise<Article[]> {
-            return this.articleService.findArticles(articleQueryDto.limit, articleQueryDto);
+            return this.articleService.findArticles(articleQueryDto.limit, articleQueryDto.offset, articleQueryDto);
       }
 
     @ApiResponse({ status: 200, description: 'Deleted Article.' })

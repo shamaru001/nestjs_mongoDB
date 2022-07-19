@@ -16,6 +16,7 @@ export class ArticleService {
 
     public async findArticles(
         limit: number,
+        offset: number,
         fields: ArticleQueryDto
     ): Promise<Article[]> {
         return this.articleModel
@@ -23,6 +24,7 @@ export class ArticleService {
                 isDeleted: false,
                 ...fields
             })
+            .skip(offset)
             .limit(limit)
             .exec();
     }

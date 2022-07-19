@@ -46,4 +46,8 @@ export class ArticleQueryDto {
     @IsOptional()
     limit?: number;
 
+    @ApiPropertyOptional()
+    @IsOptional()
+    offset?: number;
+
 }
